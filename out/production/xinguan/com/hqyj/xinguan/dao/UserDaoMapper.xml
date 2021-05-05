@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<mapper namespace="com.hqyj.xinguan.dao.UserDao">
+    <!--    定义一些重复的语句片段-->
+    <sql id="userColumn">
+        select id,name,age,address,phone,email,username,password,is_vaild as isValid,createtime as createTime
+    </sql>
+<!--    映射语句 id 对应UserDao接口方法名称 resultType: 指明返回类型是java的User的全类名  -->
+    <select id="queryAll" resultType="com.hqyj.xinguan.entity.User">
+--         写sql语句
+         <include refid="userColumn"/> from user
+    </select>
+    <select id="queryByUsernameAndPassword" resultType="com.hqyj.xinguan.entity.User">
+--         写sql语句
+        <include refid="userColumn"/> from user  where username=#{userName} and password=#{password}
+    </select>
+    <select id="queryAllCount" resultType="integer">
+            select count(*) from user
+    </select>
+    <select id="getAllByPage" resultType="com.hqyj.xinguan.entity.User">
+         <include refid="userColumn"/> from user  limit #{pageNumber}, #{pageSize}
+    </select>
+
+    <select id="querySome" resultType="com.hqyj.xinguan.entity.User"> --  模糊查询: 用户昵称和手机
+         <include refid="userColumn"/>from user where name like #{queryString} or phone like #{queryString}
+    </select>
+    <delete id="deleteOneById" parameterType="java.lang.Integer">
+
+            -- 根据id来删除用户
+        delete from user where id=#{id};
+    </delete>
+
+    <insert id="insertOne" parameterType="com.hqyj.xinguan.entity.User">
+        insert  into user (name, age, phone, email, address, username, password)
+        value (#{name}, #{age}, #{phone},#{email}, #{address}, #{userName}, #{password})
+    </insert>
+
+    <select id="queryOneById" resultType="com.hqyj.xinguan.entity.User">
+        <include refid="userColumn"/> from user where id=#{id}
+    </select>
+
+    <update id="updateOne" parameterType="com.hqyj.xinguan.entity.User">
+        update user set name=#{name},age=#{age},phone=#{phone},email=#{email},
+                        address=#{address},password=#{password} where id=#{id}
+    </update>
+
+    <update id="stopStatus">
+        update user set is_vaild=0 where id=#{id}
+    </update>
+
+    <update id="startStatus">
+        update user set is_vaild=1 where id=#{id}
+    </update>
+
+
+</mapper>

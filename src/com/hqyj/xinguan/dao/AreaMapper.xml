@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<mapper namespace="com.hqyj.xinguan.dao.AreaMapper">
+    <select id="queryAreaOfProvinceByPage" resultType="com.hqyj.xinguan.entity.AreaInfo">
+        select code as id, areaName,confirmCount,curedCount,deadCount
+        from info
+        where areaName is not null<if test="time !=null"> and time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if> limit #{pageNumber}, #{pageSize}
+    </select>
+
+    <select id="countOfAreaInProvince" resultType="int">
+        select count(*)
+        from info
+        where areaName is not null<if test="time !=null"> and time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if>
+    </select>
+
+    <insert id="insertAreaInProvince" parameterType="com.hqyj.xinguan.entity.AreaInfo">
+        insert into info(time,provinceName,areaName,confirmCount,curedCount,deadCount)
+            value (#{time},#{provinceName},#{areaName},#{confirmCount},#{curedCount},#{deadCount})
+    </insert>
+
+    <select id="queryAreaById" resultType="com.hqyj.xinguan.entity.AreaInfo">
+        select code id, areaName,confirmCount, curedCount, deadCount
+        from info
+        where code=#{id}
+    </select>
+
+    <update id="updateAreaOfProvince" parameterType="com.hqyj.xinguan.entity.AreaInfo">
+        update info
+        set areaName=#{areaName},confirmCount=${confirmCount},curedCount=${curedCount},deadCount=${deadCount}
+        where code=${id}
+    </update>
+
+    <delete id="deleteAreaOneById">
+        delete from info where code=#{id}
+    </delete>
+
+    <delete id="deleteAreaOneByTimeAndProvinceName">
+        delete from info where<if test="time !=null"> time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if>
+    </delete>
+
+    <select id="queryAreaByName" resultType="com.hqyj.xinguan.entity.AreaInfo">
+        select code id, areaName,confirmCount, curedCount, deadCount
+        from info
+        where areaName=#{areaName}<if test="time !=null"> and time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if>
+    </select>
+
+    <select id="queryAreaOfNewProvince" resultType="com.hqyj.xinguan.entity.AreaInfo">
+        select code id, confirmCount, curedCount, deadCount
+        from info
+        where areaName is not null<if test="time !=null"> and time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if>
+    </select>
+
+    <select id="queryAreaByTimeAndProvinceNameAndAreaName" resultType="com.hqyj.xinguan.entity.AreaInfo">
+        select code id, time,areaName,provinceName,confirmCount, curedCount, deadCount
+        from info
+        where areaName=#{areaName}<if test="time !=null"> and time=#{time}</if><if test="provinceName != null and provinceName != ''"> and provinceName=#{provinceName}</if>
+    </select>
+</mapper>

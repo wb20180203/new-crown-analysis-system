@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<mapper namespace="com.hqyj.xinguan.dao.InfoDao">
+    <select id="queryProvince" resultType="com.hqyj.xinguan.entity.Province">
+        select code as id,time, provinceName,confirmCount,curedCount,deadCount
+        from info
+        where areaName is null
+        limit #{pageNumber}, #{pageSize}
+    </select>
+
+    <select id="queryProvinceAllCount" resultType="int">
+        select count(*)
+        from info
+        where areaName is null
+    </select>
+
+    <delete id="deleteProvince">
+        delete from info where code=#{id}
+    </delete>
+
+    <select id="getProvinceById" resultType="com.hqyj.xinguan.entity.Province">
+        select code id, time,provinceName,confirmCount, curedCount, deadCount
+        from info
+        where code=#{id}
+    </select>
+
+    <update id="updateProvinceById" parameterType="com.hqyj.xinguan.entity.Province">
+        update info
+        set confirmCount=${confirmCount},curedCount=${curedCount},deadCount=${deadCount}
+        where code=${id}
+    </update>
+
+    <insert id="insertProvince" parameterType="com.hqyj.xinguan.entity.Province">
+        insert into info(time,provinceName,confirmCount,curedCount,deadCount)
+        value (#{time},#{provinceName},#{confirmCount},#{curedCount},#{deadCount})
+    </insert>
+
+    <select id="querySomeProvince" resultType="com.hqyj.xinguan.entity.Province">
+        select code as id,time, provinceName,confirmCount,curedCount,deadCount
+        from info
+        where areaName is null <if test="provinceName != null and provinceName != ''">and provinceName=#{provinceName}</if><if test="time !=null"> and time=#{time}</if>
+        limit #{pageNum},#{pageSize}
+    </select>
+
+    <select id="querySomeProvinceTotal" resultType="int">
+        select count(*)
+        from info
+        where areaName is null <if test="provinceName != null and provinceName != ''">and provinceName=#{provinceName}</if><if test="time !=null"> and time=#{time}</if>
+    </select>
+
+    <select id="getProvinceByTimeAndName" resultType="com.hqyj.xinguan.entity.Province">
+        select code as id,time, provinceName,confirmCount,curedCount,deadCount
+        from info
+        where areaName is null <if test="provinceName != null and provinceName != ''">and provinceName=#{provinceName}</if><if test="time !=null"> and time=#{time}</if>
+    </select>
+</mapper>

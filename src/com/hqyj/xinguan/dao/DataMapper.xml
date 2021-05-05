@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--映射配置文件定义：一个映射配置文件对应一个java接口文件（由namespace指明），
+在这个接口文件定义对数据库的操作-->
+<mapper namespace="com.hqyj.xinguan.dao.Data">
+    <select id="getNewProvinceData" resultType="com.hqyj.xinguan.entity.EchartsData">
+        select provinceName name,confirmCount value
+        from info
+        where time=(select max(time) from info) and areaName is null
+    </select>
+
+    <select id="getAreaDataByProvinceName" resultType="com.hqyj.xinguan.entity.EchartsData">
+        select areaName name,confirmCount value
+        from info
+        where time=(select max(time) from info) and areaName is not null and provinceName=#{provinceName}
+    </select>
+</mapper>
